@@ -1,0 +1,3 @@
+admins = [
+  "boundary-admin"
+]
