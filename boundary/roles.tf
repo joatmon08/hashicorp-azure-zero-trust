@@ -36,12 +36,24 @@ resource "boundary_role" "org_admin" {
   ]
   principal_ids = [
     boundary_group.admins.id,
-    boundary_managed_group.operators.id
   ]
 }
 
+resource "boundary_role" "org_readonly" {
+  name           = "readonly"
+  description    = "Read-only role"
+  scope_id       = boundary_scope.global.id
+  grant_scope_id = boundary_scope.org.id
+  grant_strings = [
+    "id=*;type=*;actions=read"
+  ]
+  principal_ids = [
+    boundary_managed_group.operators.id,
+    boundary_managed_group.db.id
+  ]
+}
 # Adds an org-level role granting administrative permissions within the core_infra project
-resource "boundary_role" "project_admin" {
+resource "boundary_role" "core_infra" {
   name           = "${boundary_scope.core_infra.id}-admin"
   description    = "Administrator role for ${boundary_scope.core_infra.id}"
   scope_id       = boundary_scope.org.id
@@ -53,24 +65,6 @@ resource "boundary_role" "project_admin" {
     boundary_group.admins.id,
     boundary_managed_group.operators.id
   ]
-}
-
-# Adds a read-only role in the global scope granting read-only access
-# to all resources within the org scope and adds principals from the
-# security team to the role
-resource "boundary_role" "org_readonly" {
-  name        = "readonly"
-  description = "Read-only role"
-  principal_ids = [
-    boundary_managed_group.db.id
-  ]
-  grant_strings = [
-    "id=*;type=*;actions=read",
-    "id=*;type=target;actions=read,list,authorize-session",
-    "id=*;type=session;actions=read,list"
-  ]
-  scope_id       = boundary_scope.global.id
-  grant_scope_id = boundary_scope.org.id
 }
 
 resource "boundary_role" "db_admin" {
