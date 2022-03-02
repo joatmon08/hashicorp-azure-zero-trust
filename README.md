@@ -62,6 +62,16 @@
 
 ### Set up Vault
 
+1. Initialize Vault. Save the unseal keys and root token in `unseal.json`.
+   ```shell
+   $ make vault-init
+
+   Unseal Key (will be hidden):  <copy unseal_hex from unseal.json>
+   ```
+
+1. Copy the root token from `unseal.json` and set it to the `VAULT_TOKEN`
+   environment variable.
+
 1. Go to the `vault/` directory.
 
 1. Define variables under `variables.tf.`
