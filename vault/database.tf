@@ -19,8 +19,9 @@ resource "vault_database_secret_backend_connection" "mssql" {
 }
 
 resource "vault_database_secret_backend_role" "application" {
-  backend             = vault_mount.mssql.path
-  name                = local.vault_role
-  db_name             = vault_database_secret_backend_connection.mssql.name
-  creation_statements = ["CREATE USER [{{name}}] WITH PASSWORD = '{{password}}';GRANT SELECT TO [{{name}}];"]
+  backend               = vault_mount.mssql.path
+  name                  = local.vault_role
+  db_name               = vault_database_secret_backend_connection.mssql.name
+  creation_statements   = ["CREATE USER [{{name}}] WITH PASSWORD = '{{password}}';GRANT SELECT TO [{{name}}];"]
+  revocation_statements = ["DROP USER [{{name}}];"]
 }
