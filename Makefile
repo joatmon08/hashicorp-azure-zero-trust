@@ -41,5 +41,8 @@ claims:
 	boundary accounts list -auth-method-id $(shell cd boundary && terraform output -raw azuread_auth_method_id)
 	boundary accounts read -id ${ACCOUNT_ID}
 
+leases:
+	vault list sys/leases/lookup/expense/database/mssql/creds/app
+
 clean:
-	vault lease revoke -f -prefix expense/database/mssq
+	vault lease revoke -f -prefix expense/database/mssql
